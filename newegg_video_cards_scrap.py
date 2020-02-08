@@ -8,7 +8,7 @@ from datetime import date
 # Request newegg data
 newegg_url = 'https://www.newegg.com/p/pl?N=100007709%204814&page='
 page_size = '&PageSize=96'
-filename = 'newegg_video_cards.csv'
+filename = './csv_files/newegg_GPU_' + str(date.today()) + '.csv'
 file = open(filename, 'w')
 header = 'Date, Product_name, Producer, Price, Shipping, Rating, Number of Ratings\n'
 file.write(header)
