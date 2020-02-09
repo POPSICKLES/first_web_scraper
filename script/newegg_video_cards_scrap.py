@@ -8,11 +8,12 @@ from datetime import date
 # Request newegg data
 newegg_url = 'https://www.newegg.com/p/pl?N=100007709%204814&page='
 page_size = '&PageSize=96'
-filename = './csv_files/newegg_GPU_' + str(date.today()) + '.csv'
+filename = './csv_files/newegg_GPU_' + str(date.today()) + '.csv' 
 file = open(filename, 'w')
-header = 'Date, Product_name, Producer, Price, Shipping, Rating, Number of Ratings\n'
-file.write(header)
 
+# header = 'Date, Product_name, Producer, Price, Shipping, Rating, Number of Ratings\n'
+header = 'Brand,Series,Model,Interface,Chipset Manufacturer,GPU Series,GPU,Core Clock,Boost Clock,Effective Memory Clock,Memory Size,Memory Interface,Memory Type,DirectX,OpenGL,HDMI,DisplayPort,Max Resolution,SLI Support,Thermal Design Power,Date First Available'
+file.write(header + '\n')
 # loop over many pages, about 10, max is about 27 pages
 for j in range(1, 28):
     r = requests.get(newegg_url + str(j) + page_size)
@@ -40,7 +41,7 @@ for j in range(1, 28):
         except:
             vCard_name = ''
             vCard_brand = ''
-        
+            
         # get product ratings
         vCard_rating = vCard.findAll('a', {'class':'item-rating'})
         try:
@@ -51,21 +52,21 @@ for j in range(1, 28):
         except:
             vCard_rate5 = ''
             vCard_n_ratings = ''
-
+    
         # get product price
         vCard_cost = vCard.findAll('li', {'class':'price-current'})
         vCard_shipping = vCard.findAll('li', {'class':'price-ship'})
         try:
             if len(vCard_cost):
                 vCard_price = vCard_cost[0].strong.text
-            if len(vCard_ship_price):
+            if len(vCard_shipping):
                 vCard_ship_price = vCard_shipping[0].text.strip()
         except:
             vCard_price = ''
             vCard_ship_price = ''
 
-        file.write(str(date.today()) + ',' + vCard_name.replace(',', '') + ',' + vCard_brand + ',' 
-                   + vCard_price + ',' + vCard_ship_price + ',' + vCard_rate5 + ',' + vCard_n_ratings + '\n')
+        file.write(str(date.today()) + ';' + vCard_name.replace(';', '') + ';' + vCard_brand + ';' 
+                   + vCard_price + ';' + vCard_ship_price + ';' + vCard_rate5 + ';' + vCard_n_ratings + '\n')
     time.sleep(10)
 file.close()
 
